@@ -5,3 +5,81 @@ df = pd.read_csv('/content/SeoulBikeData.csv', encoding='latin-1')
 df.head()
 # Data Description
 df.describe()
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Assuming 'df' is your DataFrame and 'Rented Bike Count' is a column in it.
+plt.figure(figsize=(8, 6))
+sns.boxplot(x=df['Rented Bike Count'])
+plt.title('Boxplot of Rented Bike Count')
+plt.show()
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the CSV file into a pandas DataFrame.
+df = pd.read_csv('/content/SeoulBikeData.csv', encoding='latin-1')
+
+# **Exploratory data analysis.** (Charts: bar chart, histograms,
+# boxplots, scatter plot etc.)
+
+# Aggregate the data by Hour and sum the Rented Bike Count
+hourly_rental_sum = df.groupby('Hour')['Rented Bike Count'].sum()
+
+# Plot the aggregated data
+hourly_rental_sum.plot(kind='bar', figsize=(10, 6), color='skyblue')
+plt.title('Total Bike Rentals by Hour', fontsize=16)
+plt.xlabel('Hour of the Day', fontsize=12)
+plt.ylabel('Total Bike Rentals', fontsize=12)
+plt.xticks(rotation=0)
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.show()
+
+# Histogram (example: Distribution of rented bike counts)
+plt.figure(figsize=(8, 6))
+plt.hist(df['Rented Bike Count'], bins=30)  # Adjust bins as needed
+plt.title('Distribution of Rented Bike Counts')
+plt.xlabel('Rented Bike Count')
+plt.ylabel('Frequency')
+plt.show()
+
+# Boxplot (example: Distribution of temperature)
+plt.figure(figsize=(8, 6))
+sns.boxplot(x=df['Temperature(°C)'])
+plt.title('Boxplot of Temperature')
+plt.show()
+
+# Scatter plot (example: Relationship between temperature and rented bike count)
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='Temperature(°C)', y='Rented Bike Count', data=df)
+plt.title('Temperature vs. Rented Bike Count')
+plt.xlabel('Temperature (°C)')
+plt.ylabel('Rented Bike Count')
+plt.show()
+
+
+# Additional plots (examples):
+
+# Boxplot of 'Humidity(%)'
+plt.figure(figsize=(8,6))
+sns.boxplot(x=df['Humidity(%)'])
+plt.title('Boxplot of Humidity')
+plt.show()
+
+# Scatter plot of 'Wind speed (m/s)' vs 'Visibility (10m)'
+plt.figure(figsize=(10,6))
+sns.scatterplot(x='Wind speed (m/s)', y='Visibility (10m)', data=df)
+plt.title('Wind Speed vs Visibility')
+plt.show()
+
+# Aggregate the data by Seasons and sum the Rented Bike Count
+seasonal_rental_sum = df.groupby('Seasons')['Rented Bike Count'].sum()
+
+# Plot the aggregated data
+seasonal_rental_sum.plot(kind='bar', figsize=(8, 6), color='coral')
+plt.title('Total Bike Rentals per Season', fontsize=16)
+plt.xlabel('Seasons', fontsize=12)
+plt.ylabel('Total Bike Rentals', fontsize=12)
+plt.xticks(rotation=0)
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.show()
