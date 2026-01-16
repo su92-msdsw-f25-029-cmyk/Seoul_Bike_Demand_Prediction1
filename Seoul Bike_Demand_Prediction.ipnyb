@@ -83,3 +83,7 @@ plt.ylabel('Total Bike Rentals', fontsize=12)
 plt.xticks(rotation=0)
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.show()
+#!pip intall
+!pip install ydata-profiling
+import pandas as pd
+from ydata_profiling import ProfileReport
