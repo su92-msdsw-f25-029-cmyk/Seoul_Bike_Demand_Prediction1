@@ -284,3 +284,6 @@ def evaluate_regression_model(y_true, y_pred):
 y_pred = model.predict(X_test).flatten()
 # Evaluate the model
 evaluation_results = evaluate_regression_model(y_test, y_pred)
+# Print the results
+for metric, value in evaluation_results.items():
+    print(f"{metric}: {value:.2f}")
