@@ -89,3 +89,67 @@ import pandas as pd
 from ydata_profiling import ProfileReport
 print (df.info())
 print(df.isnull().sum())
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from tensorflow import keras
+from tensorflow.keras import layers
+
+# Load the dataset
+df = pd.read_csv('/content/SeoulBikeData.csv', encoding='latin-1')
+
+# Preprocessing
+# 1. Feature Engineering (Example: Combine date and time)
+df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)  # Specify dayfirst=True to match the date format
+df['Hour'] = pd.to_numeric(df['Hour'])
+df['Day'] = df['Date'].dt.dayofweek  # Create new feature for day of the week
+
+# 2. Handle Categorical features
+categorical_features = ['Seasons', 'Holiday', 'Functioning Day']
+numerical_features = ['Hour', 'Temperature(°C)', 'Humidity(%)', 'Visibility (10m)',
+                      'Dew point temperature(°C)', 'Solar Radiation (MJ/m2)',
+                      'Rainfall(mm)', 'Snowfall (cm)', 'Day']
+
+# Create a column transformer for preprocessing
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', StandardScaler(), numerical_features),
+        ('cat', OneHotEncoder(), categorical_features)
+    ])
+
+X = df.drop('Rented Bike Count', axis=1)
+y = df['Rented Bike Count']
+X_processed = preprocessor.fit_transform(X)
+
+# Reshape data for RNN (Create sequences)
+def create_sequences(features, target, sequence_length):
+    X_seq, y_seq = [], []
+    for i in range(len(features) - sequence_length):
+        X_seq.append(features[i:i + sequence_length])
+        y_seq.append(target[i + sequence_length])
+    return np.array(X_seq), np.array(y_seq)
+
+sequence_length = 24  # Example: Use the past 24 hours to predict the next hour
+X_seq, y_seq = create_sequences(X_processed, y, sequence_length)
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_seq, y_seq, test_size=0.2, random_state=42)
+
+# RNN Model
+model = keras.Sequential([
+    layers.SimpleRNN(256, activation='relu', return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])),
+    layers.SimpleRNN(128, activation='relu'),
+    layers.Dense(1)  # Output layer (regression)
+])
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae'])
+
+# Train the model
+history = model.fit(X_train, y_train, epochs=100, batch_size=32, validation_split=0.2)
+
+# Evaluate the model
+loss, mae = model.evaluate(X_test, y_test)
+print(f"Mean Absolute Error: {mae}")
