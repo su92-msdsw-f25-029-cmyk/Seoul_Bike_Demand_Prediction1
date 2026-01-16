@@ -215,3 +215,9 @@ features = df[['Hour', 'Temperature(°C)', 'Humidity(%)', 'Visibility (10m)',
 
 # Calculate the correlation matrix
 correlation_matrix = features.corr()
+
+# Plot the heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(correlation_matrix, annot=True, fmt='.2f', cmap='coolwarm', cbar=True)
+plt.title('Feature Correlation Heatmap')
+plt.show()
