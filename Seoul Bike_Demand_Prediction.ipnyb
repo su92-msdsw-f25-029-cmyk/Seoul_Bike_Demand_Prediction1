@@ -282,3 +282,5 @@ def evaluate_regression_model(y_true, y_pred):
     return results
 # Generate predictions using the trained model
 y_pred = model.predict(X_test).flatten()
+# Evaluate the model
+evaluation_results = evaluate_regression_model(y_test, y_pred)
