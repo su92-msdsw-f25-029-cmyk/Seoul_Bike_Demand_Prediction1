@@ -87,3 +87,5 @@ plt.show()
 !pip install ydata-profiling
 import pandas as pd
 from ydata_profiling import ProfileReport
+print (df.info())
+print(df.isnull().sum())
