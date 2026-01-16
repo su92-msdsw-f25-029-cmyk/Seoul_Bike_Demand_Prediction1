@@ -280,3 +280,5 @@ def evaluate_regression_model(y_true, y_pred):
         "R-squared (R2)": r2
     }
     return results
+# Generate predictions using the trained model
+y_pred = model.predict(X_test).flatten()
